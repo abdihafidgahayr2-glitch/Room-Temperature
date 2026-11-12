@@ -1,0 +1,14 @@
+[project]
+name = "room-monitor"
+version = "0.1.0"
+description = "Room temperature & humidity monitor with automatic window control"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.141.1",
+    "sqlalchemy>=2.1.2",
+    "psycopg[binary]>=3.1",
+    "paho-mqtt>=2.0",
+    "bcrypt>=4.0",
+    "itsdangerous>=2.1",
+    "python-dotenv>=1.0",
+]
