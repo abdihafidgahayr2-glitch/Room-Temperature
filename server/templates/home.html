@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% block content %}
+  <!-- Current readings -->
+  <div class="row g-3 mb-4">
+    <div class="col-6">
+      <article class="content-section py-3 px-4 h-100 text-center">
+        <small class="text-body-secondary">Temperature</small>
+        <p class="reading-value mb-0" id="temperature">–</p>
+      </article>
+    </div>
+    <div class="col-6">
+      <article class="content-section py-3 px-4 h-100 text-center">
+        <small class="text-body-secondary">Humidity</small>
+        <p class="reading-value mb-0" id="humidity">–</p>
+      </article>
+    </div>
+  </div>
+  <p class="text-body-secondary" id="last-updated">Waiting for data…</p>
+
+  <!-- History graph -->
+  <article class="content-section py-3 px-4 mb-4">
+    <h2 class="h4">Last 24 hours</h2>
+    <canvas id="readings-chart" height="140"></canvas>
+  </article>
+
+  <!-- Latest readings, same layout as the sensor readings list from class -->
+  <h2 class="h4 mb-3">Latest readings</h2>
+  {% for sensor_reading in latest_readings %}
+    <article class="content-section py-3 px-4 mb-3">
+      <div class="article-metadata mb-2">
+        <small class="text-body-secondary">{{ sensor_reading.date_timestamp.strftime('%d %B, %Y %H:%M:%S') }}</small>
+      </div>
+      <h3 class="h5 article-title mb-1">{{ sensor_reading.sensor | capitalize }}</h3>
+      <p class="article-content mb-0">
+        {{ sensor_reading.content }}{% if sensor_reading.sensor == "temperature" %} °C{% else %} %{% endif %}
+      </p>
+    </article>
+  {% else %}
+    <p class="text-body-secondary">No readings yet. Start the Raspberry Pi to send some.</p>
+  {% endfor %}
+{% endblock content %}
+
+{% block sidebar %}
+  <!-- Window -->
+  <div class="content-section py-3 px-4 mb-4">
+    <h3>Window</h3>
+    <p class="reading-value window-{{ window_state }}" id="window-state">{{ window_state }}</p>
+    <div class="d-flex gap-2">
+      <button type="button" class="btn btn-primary" data-window-action="open">Open</button>
+      <button type="button" class="btn btn-outline-secondary" data-window-action="close">Close</button>
+    </div>
+    <small class="text-body-secondary d-block mt-2" id="window-message"></small>
+  </div>
+
+  <!-- Thresholds -->
+  <div class="content-section py-3 px-4 mb-4">
+    <h3>Automatic window</h3>
+    <p class="text-body-secondary">Opens when the room gets warmer than the open temperature and closes when it cools down.</p>
+    <form id="settings-form">
+      <div class="mb-3">
+        <label for="open_at" class="form-label">Open at (°C)</label>
+        <input type="number" step="0.5" class="form-control" id="open_at" name="open_at" value="{{ open_at }}" required />
+      </div>
+      <div class="mb-3">
+        <label for="close_at" class="form-label">Close at (°C)</label>
+        <input type="number" step="0.5" class="form-control" id="close_at" name="close_at" value="{{ close_at }}" required />
+      </div>
+      <button type="submit" class="btn btn-outline-primary">Save</button>
+      <small class="text-body-secondary ms-2" id="settings-message"></small>
+    </form>
+  </div>
+{% endblock sidebar %}
+
+{% block scripts %}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <script src="{{ url_for('static', path='js/dashboard.js') }}"></script>
+{% endblock scripts %}
