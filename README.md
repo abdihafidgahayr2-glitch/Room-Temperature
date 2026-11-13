@@ -1,9 +1,5 @@
 # Room Temperature & Humidity Monitor
 
-**Student:** Abdihafid Gahayr · **Module:** IoT (Software Development, DkIT) · **I-CA 2026-27**
-
-**Live site:** https://YOUR-DOMAIN (replace)
-**Repository:** https://github.com/YOUR-USERNAME/iot_ica_abdihafid_gahayr (replace)
 
 ## What it does
 
